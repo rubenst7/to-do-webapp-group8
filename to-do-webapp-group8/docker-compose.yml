@@ -1,0 +1,28 @@
+version: '3'
+services:
+
+# database service
+  database:
+    build: ./database
+    image: database
+    container_name: to-do-database
+    volumes:
+      - ./data/database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: database
+    ports:
+      - "3306:3306"
+
+# webapp service
+  webapp:
+    build: ./webapp
+    image: webapp
+    container_name: to-do-webapp
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
+    volumes:
+      - ./webapp:/code
+    command: ['python', 'main.py']
